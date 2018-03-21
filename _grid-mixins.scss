@@ -1,0 +1,260 @@
+/* 
+* MIT License
+* Copyright (c) 2018 Cassandra O'Connell
+*/
+
+//  Contents:
+//  1. grid
+//  2. grid-area
+//  3. grid-column
+//  4. grid-column-end
+//  5. grid-column-start
+//  6. grid-row
+//  7. grid-row-end
+//  8. grid-row-start
+//  9. grid-template -
+// 10. grid-template-columns -
+// 11. grid-template-rows -
+// 12. grid-template-areas -
+
+
+
+
+// ========================= 1 =========================== //
+//  Usage:
+//  @include grid;
+//
+@mixin grid {
+    display: grid;
+    display: -ms-grid;
+}
+// ======================================================= //
+
+
+// ========================= 2 =========================== //
+//  Usage:
+//  @include grid-area($start-row, $start-column, $end-row, $end-column);
+//
+//  Accepted values:
+//  $start-row: Value of the row the element starts on.
+//  $start-column: Value of the column the element starts on.
+//  $end-row: Value of the row to end on. 
+//  $end-column: Value of the column to end on.
+//
+@mixin grid-area($start-row, $start-column, $end-row, $end-column) {
+    @include grid-row-start(#{$start-row});
+    @include grid-column-start(#{$start-column});
+    @include grid-row-end(#{$end-row});
+    @include grid-column-end(#{$end-column});
+}
+// ======================================================= //
+
+
+// ========================= 3 =========================== //
+//  Usage:
+//  @include grid-column($start-column, $end-column);
+//
+//  Accepted values:
+//  $start-column: Value of the column the element starts on.
+//  $end-column: Value of the column to end on. 
+//
+@mixin grid-column($start-column, $end-column) {
+    $normal-syntax: $start-column slash() $end-column;
+
+    @supports (grid-column-end: #{$end-column}) {
+        grid-column: #{$normal-syntax};
+    }
+
+    @supports not (grid-column-end: #{$end-column}) {
+        @include grid-column-start($start-column);
+        @include grid-column-end($end-column, $start-column)
+    }
+}
+// ======================================================= //
+
+
+// ========================= 4 =========================== //
+//  Usage:
+//  @include grid-column-end($end-column, $start-column);
+//
+//  Accepted values:
+//  $end-column: Value of the column to end on. 
+//  $start-column: Value of the column the element starts on.
+//
+@mixin grid-column-end($end-column, $start-column) {
+    $column-span: $end-column - $start-column;
+
+    @supports (grid-column-end: #{$end-column}) {
+        grid-column-end: $end-column;
+    }
+
+    @supports (-ms-grid-column-span: #{$column-span}) {
+        -ms-grid-column-span: $column-span;
+    }
+
+    @if $start-column == undefined {
+        @warn "You must specify the starting column to use the grid-column-end mixin.";
+    }
+}
+// ======================================================= //
+
+
+// ========================= 5 =========================== //
+//  Usage:
+//  @include grid-column-start($start-column);
+//
+//  Accepted values:
+//  $start-column: Value of the column the element starts on.
+//
+@mixin grid-column-start($start-column) {
+    @supports (grid-column-start: #{$start-column}) {
+        grid-column-start: $start-column;
+    }
+
+    @supports (-ms-grid-column: #{$start-column}) {
+        -ms-grid-column: $start-column;
+    }
+}
+// ======================================================= //
+
+
+// ========================= 6 =========================== //
+//  Usage:
+//  @include grid-row($start-row, $end-row);
+//
+//  Accepted values:
+//  $start-row: Value of the row the element starts on.
+//  $end-row: Value of the row to end on. 
+//
+@mixin grid-row($start-row, $end-row) {
+    $normal-syntax: $start-row slash() $end-row;
+
+    @supports (grid-row-end: #{$end-row}) {
+        grid-row: #{$normal-syntax};
+    }
+
+    @supports not (grid-row-end: #{$end-row}) {
+        @include grid-row-start($start-row);
+        @include grid-row-end($end-row, $start-row)
+    }
+}
+// ======================================================= //
+
+
+// ========================= 7 =========================== //
+//  Usage:
+//  @include grid-row-end($end-row, $start-row);
+//
+//  Accepted values:
+//  $end-row: Value of the row to end on. 
+//  $start-row: Value of the row the element starts on.
+//
+@mixin grid-row-end($end-row, $start-row) {
+    $row-span: $end-row - $start-row;
+
+    @supports (grid-row-end: #{$end-row}) {
+        grid-row-end: $end-row;
+    }
+
+    @supports (-ms-grid-row-span: #{$row-span}) {
+        -ms-grid-row-span: $row-span;
+    }
+
+    @if $start-row == undefined {
+        @warn "You must specify the starting row to use the grid-row-end mixin.";
+    }
+}
+// ======================================================= //
+
+
+// ========================= 8 =========================== //
+//  Usage:
+//  @include grid-row-start($start-row);
+//
+//  Accepted values:
+//  $start-row: Value of the row the element starts on.
+//
+@mixin grid-row-start($start-row) {
+    @supports (grid-row-start: #{$start-row}) {
+        grid-row-start: $start-row;
+    }
+
+    @supports (-ms-grid-row: #{$start-row}) {
+        -ms-grid-row: $start-row;
+    }
+}
+// ======================================================= //
+
+
+// ========================= 9 =========================== //
+//  Usage:
+//  @include grid-template($value);
+//
+//  Accepted values:
+//  
+//
+@mixin grid-template($value) {
+    // code
+}
+// ======================================================= //
+
+
+// ========================= 10 ========================== //
+//  Usage:
+//  @include grid-template-rows($value);
+//
+//  Accepted values:
+//  
+//
+@mixin grid-template-rows($value) {
+    // code
+}
+// ======================================================= //
+
+
+// ========================= 11 ========================== //
+//  Usage:
+//  @include grid-template-columns($value);
+//
+//  Accepted values:
+//  
+//
+@mixin grid-template-columns($value) {
+    $parsed-value: parse-template-value($value);
+
+    @supports (grid-template-columns: #{$value}) {
+        grid-template-columns: $value;
+    }
+
+    @supports (-ms-grid-columns: #{$parsed-value}) {
+        -ms-grid-columns: $parsed-value;
+    }
+}
+// ======================================================= //
+
+
+// ========================= 12 ========================== //
+//  Usage:
+//  @include grid-template-areas($value);
+//
+//  Accepted values:
+//  
+//
+@mixin grid-template-areas($value) {
+    // code
+}
+// ======================================================= //
+
+
+
+
+// ================= UTILITY FUNCTIONS ==================== //
+
+@function parse-template-value($value) {
+
+}
+
+@function slash() {
+    @return unquote("/");
+}
+// ======================================================= //
