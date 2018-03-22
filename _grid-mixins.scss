@@ -5,7 +5,7 @@
 
 //  Contents:
 //  1. display-grid
-//  2. grid
+//  2. grid -
 //  3. grid-area
 //  4. grid-column
 //  5. grid-column-end
@@ -14,9 +14,11 @@
 //  8. grid-row-end
 //  9. grid-row-start
 // 10. grid-template -
-// 11. grid-template-columns -
-// 12. grid-template-rows -
-// 13. grid-template-areas -
+// 11. grid-template-columns
+// 12. grid-template-rows
+
+//  Note: Some mixins take different parameters than their CSS counterparts.
+//  As a precaution, the compiler will throw an error if the extra parameters aren't defined.
 
 
 
@@ -48,11 +50,10 @@
 //  Usage:
 //  @include grid-area($start-row, $start-column, $end-row, $end-column);
 //
-//  Accepted values:
-//  $start-row: Value of the row the element starts on.
-//  $start-column: Value of the column the element starts on.
-//  $end-row: Value of the row to end on. 
-//  $end-column: Value of the column to end on.
+//  @param { Number} - $start-row: Value of the row the element starts on.
+//  @param { Number} - $start-column: Value of the column the element starts on.
+//  @param { Number} - $end-row: Value of the row to end on. 
+//  @param { Number} - $end-column: Value of the column to end on.
 //
 @mixin grid-area($start-row, $start-column, $end-row, $end-column) {
     @include grid-row-start(#{$start-row});
@@ -67,9 +68,8 @@
 //  Usage:
 //  @include grid-column($start-column, $end-column);
 //
-//  Accepted values:
-//  $start-column: Value of the column the element starts on.
-//  $end-column: Value of the column to end on. 
+//  @param { Number} - $start-column: Value of the column the element starts on.
+//  @param { Number} - $end-column: Value of the column to end on. 
 //
 @mixin grid-column($start-column, $end-column) {
     $normal-syntax: $start-column slash() $end-column;
@@ -90,9 +90,8 @@
 //  Usage:
 //  @include grid-column-end($end-column, $start-column);
 //
-//  Accepted values:
-//  $end-column: Value of the column to end on. 
-//  $start-column: Value of the column the element starts on.
+//  @param { Number} - $end-column: Value of the column to end on. 
+//  @param { Number} - $start-column: Value of the column the element starts on.
 //
 @mixin grid-column-end($end-column, $start-column) {
     $column-span: $end-column - $start-column;
@@ -106,7 +105,7 @@
     }
 
     @if $start-column == undefined {
-        @warn "You must specify the starting column to use the grid-column-end mixin.";
+        @error "Must specify `$start-column` to use `grid-column-end` mixin.";
     }
 }
 // ======================================================= //
@@ -116,8 +115,7 @@
 //  Usage:
 //  @include grid-column-start($start-column);
 //
-//  Accepted values:
-//  $start-column: Value of the column the element starts on.
+//  @param { Number} - $start-column: Value of the column the element starts on.
 //
 @mixin grid-column-start($start-column) {
     @supports (grid-column-start: #{$start-column}) {
@@ -135,9 +133,8 @@
 //  Usage:
 //  @include grid-row($start-row, $end-row);
 //
-//  Accepted values:
-//  $start-row: Value of the row the element starts on.
-//  $end-row: Value of the row to end on. 
+//  @param { Number} - $start-row: Value of the row the element starts on.
+//  @param { Number} - $end-row: Value of the row to end on. 
 //
 @mixin grid-row($start-row, $end-row) {
     $normal-syntax: $start-row slash() $end-row;
@@ -148,7 +145,7 @@
 
     @supports not (grid-row-end: #{$end-row}) {
         @include grid-row-start($start-row);
-        @include grid-row-end($end-row, $start-row)
+        @include grid-row-end($end-row, $start-row);
     }
 }
 // ======================================================= //
@@ -158,9 +155,8 @@
 //  Usage:
 //  @include grid-row-end($end-row, $start-row);
 //
-//  Accepted values:
-//  $end-row: Value of the row to end on. 
-//  $start-row: Value of the row the element starts on.
+//  @param { Number} - $end-row: Value of the row to end on. 
+//  @param { Number} - $start-row: Value of the row the element starts on.
 //
 @mixin grid-row-end($end-row, $start-row) {
     $row-span: $end-row - $start-row;
@@ -174,7 +170,7 @@
     }
 
     @if $start-row == undefined {
-        @warn "You must specify the starting row to use the grid-row-end mixin.";
+        @error "Must specify `$start-row` to use `grid-row-end` mixin.";
     }
 }
 // ======================================================= //
@@ -184,8 +180,7 @@
 //  Usage:
 //  @include grid-row-start($start-row);
 //
-//  Accepted values:
-//  $start-row: Value of the row the element starts on.
+//  @param { Number} - $start-row: Value of the row the element starts on.
 //
 @mixin grid-row-start($start-row) {
     @supports (grid-row-start: #{$start-row}) {
@@ -201,36 +196,23 @@
 
 // ========================= 10 ========================== //
 //  Usage:
-//  @include grid-template($value);
+//  @include grid-template($template-columns, $template-rows);
 //
-//  Accepted values:
-//  
+//  @param { Number | String } - $template-columns: Value for column template.
+//  @param { Number | String } - $template-rows: Value for row template.
 //
-@mixin grid-template($value) {
-    // code
+@mixin grid-template($template-columns, $template-rows) {
+    @include grid-template-columns($template-columns);
+    @include grid-template-rows($template-rows);
 }
 // ======================================================= //
 
 
 // ========================= 11 ========================== //
 //  Usage:
-//  @include grid-template-rows($value);
-//
-//  Accepted values:
-//  
-//
-@mixin grid-template-rows($value) {
-    // code
-}
-// ======================================================= //
-
-
-// ========================= 12 ========================== //
-//  Usage:
 //  @include grid-template-columns($value);
 //
-//  Accepted values:
-//  
+//  @param { Number | String } - $value: Number and sizing of columns in grid template (accepts repeat() and minmax())
 //
 @mixin grid-template-columns($value) {
     $parsed-value: parse-template-value($value);
@@ -246,15 +228,22 @@
 // ======================================================= //
 
 
-// ========================= 13 ========================== //
+// ========================= 12 ========================== //
 //  Usage:
-//  @include grid-template-areas($value);
+//  @include grid-template-rows($value);
 //
-//  Accepted values:
-//  
+//  @param { Number | String } - $value: Number and sizing of rows in grid template (accepts repeat() and minmax())
 //
-@mixin grid-template-areas($value) {
-    // code
+@mixin grid-template-rows($value) {
+    $parsed-value: parse-template-value($value);
+
+    @supports (grid-template-rows: #{$value}) {
+        grid-template-rows: $value;
+    }
+
+    @supports (-ms-grid-rows: #{$parsed-value}) {
+        -ms-grid-rows: $parsed-value;
+    }
 }
 // ======================================================= //
 
@@ -262,12 +251,62 @@
 
 
 // ================= UTILITY FUNCTIONS ==================== //
+@function parse-template-value($value-to-parse) {
 
-@function parse-template-value($value) {
+    @if type-of($value: $value-to-parse) == 'number' {
+        @return $value-to-parse;
+    } @else if str-slice($string: $value-to-parse, $start-at: 1, $end-at: 6) == "repeat" {
+        @return parse-repeat($value-to-parse)
+    } @else if str-slice($string: $value-to-parse, $start-at: 1, $end-at: 6) == "minmax" {
+        @return parse-minmax($value-to-parse)
+    } @else {
+        @error 'Error parsing template value.'
+    };
+};
+
+// Unfinished.
+@function parse-repeat($value) {
+    /*
+    $repetition-value-string-start: str-index($string: $template-values, $substring: "(") + 1;
+    $repetition-value-string-end: str-index($string: $template-values, $substring: ",") - 1;
+    $repetition-value: str-slice($string: $template-values, $start-at: $repetition-value-string-start, $end-at: $repetition-value-string-end);
+
+    $size-value-string-start: str-index($string: $template-values, $substring: " ") + 1;
+    $size-value-string-end: str-index($string: $template-values, $substring: ")") - 1;
+    $size-value: str-slice($string: $template-values, $start-at: $size-value-string-start, $end-at: $size-value-string-end);
+    */
+}
+
+// Unfinished.
+@function parse-minmax($value) {
 
 }
+
+@function to-number($value) {
+    /* Simplified version of Hugo Giraudel's to-number Sass function, as seen here: https://www.sassmeister.com/gist/9fa19d254864f33d4a80 */
+    @if type-of($value) != 'string' {
+        @error 'Parameter for `to-number` function must be a string.'
+    };
+
+    $digits: 0;
+    $numbers: ('0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9);
+    $result: 0;
+
+    @for $i from 1 through str-length($string: $value) {
+        $character: str-slice($string: $value, $start: $i, $end: $i);
+
+        @if $digits == 0 {
+            $result: $result * 10 + map-get($map: $numbers, $key: $character)
+        } @else {
+            $digits: $digits * 10;
+            $result: $result + map-get($map: $numbers, $key: $character) / $digits;
+        }
+    }
+    
+    @return $result;
+};
 
 @function slash() {
     @return unquote("/");
-}
+};
 // ======================================================= //
