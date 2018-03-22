@@ -1,0 +1,13 @@
+/* 
+*   MIT License
+*   Copyright (c) 2018 Cassandra O'Connell
+*/
+.main-grid {
+    display: grid;
+    display: -ms-grid; }
+    @supports (grid-template-rows: repeat(13, 1fr)) {
+        .main-grid {
+            grid-template-rows: repeat(13, 1fr); } }
+    @supports (-ms-grid-rows: 3 3 3) {
+        .main-grid {
+            -ms-grid-rows: 3 3 3; } }

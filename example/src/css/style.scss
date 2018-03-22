@@ -1,0 +1,6 @@
+@import '../../../grid-mixins';
+
+.main-grid {
+    @include display-grid;
+    @include grid-template-rows(repeat(2, 1fr));
+}

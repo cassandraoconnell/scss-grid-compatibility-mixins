@@ -1,21 +1,20 @@
 /* 
-* MIT License
-* Copyright (c) 2018 Cassandra O'Connell
+*   MIT License
+*   Copyright (c) 2018 Cassandra O'Connell
 */
 
 //  Contents:
 //  1. display-grid
-//  2. grid -
-//  3. grid-area
-//  4. grid-column
-//  5. grid-column-end
-//  6. grid-column-start
-//  7. grid-row
-//  8. grid-row-end
-//  9. grid-row-start
-// 10. grid-template -
-// 11. grid-template-columns
-// 12. grid-template-rows
+//  2. grid-area
+//  3. grid-column
+//  4. grid-column-end
+//  5. grid-column-start
+//  6. grid-row
+//  7. grid-row-end
+//  8. grid-row-start
+//  9. grid-template
+// 10. grid-template-columns
+// 11. grid-template-rows
 
 //  Note: Some mixins take different parameters than their CSS counterparts.
 //  As a precaution, the compiler will throw an error if the extra parameters aren't defined.
@@ -36,18 +35,6 @@
 
 // ========================= 2 =========================== //
 //  Usage:
-//  @include grid($value);
-//
-//  Accepted values:
-//
-@mixin grid($value) {
-
-}
-// ======================================================= //
-
-
-// ========================= 3 =========================== //
-//  Usage:
 //  @include grid-area($start-row, $start-column, $end-row, $end-column);
 //
 //  @param { Number} - $start-row: Value of the row the element starts on.
@@ -64,7 +51,7 @@
 // ======================================================= //
 
 
-// ========================= 4 =========================== //
+// ========================= 3 =========================== //
 //  Usage:
 //  @include grid-column($start-column, $end-column);
 //
@@ -86,7 +73,7 @@
 // ======================================================= //
 
 
-// ========================= 5 =========================== //
+// ========================= 4 =========================== //
 //  Usage:
 //  @include grid-column-end($end-column, $start-column);
 //
@@ -111,7 +98,7 @@
 // ======================================================= //
 
 
-// ========================= 6 =========================== //
+// ========================= 5 =========================== //
 //  Usage:
 //  @include grid-column-start($start-column);
 //
@@ -129,7 +116,7 @@
 // ======================================================= //
 
 
-// ========================= 7 =========================== //
+// ========================= 6 =========================== //
 //  Usage:
 //  @include grid-row($start-row, $end-row);
 //
@@ -151,7 +138,7 @@
 // ======================================================= //
 
 
-// ========================= 8 =========================== //
+// ========================= 7 =========================== //
 //  Usage:
 //  @include grid-row-end($end-row, $start-row);
 //
@@ -176,7 +163,7 @@
 // ======================================================= //
 
 
-// ========================= 9 =========================== //
+// ========================= 8 =========================== //
 //  Usage:
 //  @include grid-row-start($start-row);
 //
@@ -194,7 +181,7 @@
 // ======================================================= //
 
 
-// ========================= 10 ========================== //
+// ========================= 9 =========================== //
 //  Usage:
 //  @include grid-template($template-columns, $template-rows);
 //
@@ -208,7 +195,7 @@
 // ======================================================= //
 
 
-// ========================= 11 ========================== //
+// ========================= 10 ========================== //
 //  Usage:
 //  @include grid-template-columns($value);
 //
@@ -228,7 +215,7 @@
 // ======================================================= //
 
 
-// ========================= 12 ========================== //
+// ========================= 11 ========================== //
 //  Usage:
 //  @include grid-template-rows($value);
 //
@@ -260,21 +247,28 @@
     } @else if str-slice($string: $value-to-parse, $start-at: 1, $end-at: 6) == "minmax" {
         @return parse-minmax($value-to-parse)
     } @else {
-        @error 'Error parsing template value.'
+        @error 'Error parsing template value.';
     };
 };
 
-// Unfinished.
 @function parse-repeat($value) {
-    /*
-    $repetition-value-string-start: str-index($string: $template-values, $substring: "(") + 1;
-    $repetition-value-string-end: str-index($string: $template-values, $substring: ",") - 1;
-    $repetition-value: str-slice($string: $template-values, $start-at: $repetition-value-string-start, $end-at: $repetition-value-string-end);
+    $repetition-value-string-start: str-index($string: $value, $substring: "(") + 1;
+    $repetition-value-string-end: str-index($string: $value, $substring: ",") - 1;
+    $repetition-value: str-slice($string: $value, $start-at: $repetition-value-string-start, $end-at: $repetition-value-string-end);
 
-    $size-value-string-start: str-index($string: $template-values, $substring: " ") + 1;
-    $size-value-string-end: str-index($string: $template-values, $substring: ")") - 1;
-    $size-value: str-slice($string: $template-values, $start-at: $size-value-string-start, $end-at: $size-value-string-end);
-    */
+    $size-value-string-start: str-index($string: $value, $substring: " ") + 1;
+    $size-value-string-end: str-index($string: $value, $substring: ")") - 1;
+    $size-value: str-slice($string: $value, $start-at: $size-value-string-start, $end-at: $size-value-string-end);
+
+    $repetition: to-number($repetition-value);
+    $size: to-number($size-value);
+    $new-value: ();
+
+    @for $i from 1 through $repetition {
+        $new-value: append($list: $new-value, $val: $i, $separator: 'space')
+    }
+    
+    @return $new-value;
 }
 
 // Unfinished.
@@ -282,6 +276,7 @@
 
 }
 
+// Broken
 @function to-number($value) {
     /* Simplified version of Hugo Giraudel's to-number Sass function, as seen here: https://www.sassmeister.com/gist/9fa19d254864f33d4a80 */
     @if type-of($value) != 'string' {
@@ -289,17 +284,20 @@
     };
 
     $digits: 0;
-    $numbers: ('0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9);
     $result: 0;
+    $numbers: ('0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9);
 
     @for $i from 1 through str-length($string: $value) {
-        $character: str-slice($string: $value, $start: $i, $end: $i);
+        $character: str-slice($string: $value, $start-at: $i, $end-at: $i);
+        $number: map-get($map: $numbers, $key: $character);
 
-        @if $digits == 0 {
-            $result: $result * 10 + map-get($map: $numbers, $key: $character)
+        $digits: 0;
+
+        @if $digits == 1 {
+            $result: $number;
         } @else {
             $digits: $digits * 10;
-            $result: $result + map-get($map: $numbers, $key: $character) / $digits;
+            $result: $result + ($number / $digits);
         }
     }
     

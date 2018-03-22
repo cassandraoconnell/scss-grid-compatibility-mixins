@@ -4,7 +4,6 @@
 
 ### Grid Properties Supported:
 - display-grid: `@include display-grid;`
-- grid: 
 - grid-area: `@include grid-area($start-row, $start-column, $end-row, $end-column);`
 - grid-column: `@include grid-column($start-column, $end-column);`
 - grid-column-end: `@include grid-column-end($end-column, $start-column);`
@@ -20,4 +19,4 @@
 ### Grid Properties Not Supported (...yet):
 - `grid-auto-rows` and `grid-auto-flow` (IE doesn't have comparable syntax/support. Explicitly position all grid elements instead.)
 - `grid-column-gap`, `grid-row-gap`, and `grid-gap` (IE doesn't have comparable syntax/support. Create specific columns for gaps, or use margin/padding.)
-- Named rows/columns (haven't implemented yet), and consequently `grid-template-areas`.
+- Named rows/columns (haven't implemented yet), and consequently `grid` and `grid-template-areas`.
