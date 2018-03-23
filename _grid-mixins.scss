@@ -59,16 +59,8 @@
 //  @param { Number} - $end-column: Value of the column to end on. 
 //
 @mixin grid-column($start-column, $end-column) {
-    $normal-syntax: $start-column slash() $end-column;
-
-    @supports (grid-column-end: #{$end-column}) {
-        grid-column: #{$normal-syntax};
-    }
-
-    @supports not (grid-column-end: #{$end-column}) {
-        @include grid-column-start($start-column);
-        @include grid-column-end($end-column, $start-column)
-    }
+    @include grid-column-start($start-column);
+    @include grid-column-end($end-column, $start-column);
 }
 // ======================================================= //
 
@@ -83,12 +75,10 @@
 @mixin grid-column-end($end-column, $start-column) {
     $column-span: $end-column - $start-column;
 
+    -ms-grid-column-span: $column-span;
+
     @supports (grid-column-end: #{$end-column}) {
         grid-column-end: $end-column;
-    }
-
-    @supports (-ms-grid-column-span: #{$column-span}) {
-        -ms-grid-column-span: $column-span;
     }
 
     @if $start-column == undefined {
@@ -105,12 +95,10 @@
 //  @param { Number} - $start-column: Value of the column the element starts on.
 //
 @mixin grid-column-start($start-column) {
+    -ms-grid-column: $start-column;
+
     @supports (grid-column-start: #{$start-column}) {
         grid-column-start: $start-column;
-    }
-
-    @supports (-ms-grid-column: #{$start-column}) {
-        -ms-grid-column: $start-column;
     }
 }
 // ======================================================= //
@@ -124,16 +112,8 @@
 //  @param { Number} - $end-row: Value of the row to end on. 
 //
 @mixin grid-row($start-row, $end-row) {
-    $normal-syntax: $start-row slash() $end-row;
-
-    @supports (grid-row-end: #{$end-row}) {
-        grid-row: #{$normal-syntax};
-    }
-
-    @supports not (grid-row-end: #{$end-row}) {
-        @include grid-row-start($start-row);
-        @include grid-row-end($end-row, $start-row);
-    }
+    @include grid-row-start($start-row);
+    @include grid-row-end($end-row, $start-row);
 }
 // ======================================================= //
 
@@ -147,13 +127,11 @@
 //
 @mixin grid-row-end($end-row, $start-row) {
     $row-span: $end-row - $start-row;
+    
+    -ms-grid-row-span: $row-span;
 
     @supports (grid-row-end: #{$end-row}) {
         grid-row-end: $end-row;
-    }
-
-    @supports (-ms-grid-row-span: #{$row-span}) {
-        -ms-grid-row-span: $row-span;
     }
 
     @if $start-row == undefined {
@@ -170,12 +148,10 @@
 //  @param { Number} - $start-row: Value of the row the element starts on.
 //
 @mixin grid-row-start($start-row) {
+    -ms-grid-row: $start-row;
+
     @supports (grid-row-start: #{$start-row}) {
         grid-row-start: $start-row;
-    }
-
-    @supports (-ms-grid-row: #{$start-row}) {
-        -ms-grid-row: $start-row;
     }
 }
 // ======================================================= //
@@ -204,12 +180,10 @@
 @mixin grid-template-columns($value) {
     $parsed-value: parse-template-value($value);
 
+    -ms-grid-columns: $parsed-value;
+
     @supports (grid-template-columns: #{$value}) {
         grid-template-columns: $value;
-    }
-
-    @supports (-ms-grid-columns: #{$parsed-value}) {
-        -ms-grid-columns: $parsed-value;
     }
 }
 // ======================================================= //
@@ -224,12 +198,10 @@
 @mixin grid-template-rows($value) {
     $parsed-value: parse-template-value($value);
 
+    -ms-grid-rows: $parsed-value;
+
     @supports (grid-template-rows: #{$value}) {
         grid-template-rows: $value;
-    }
-
-    @supports (-ms-grid-rows: #{$parsed-value}) {
-        -ms-grid-rows: $parsed-value;
     }
 }
 // ======================================================= //
