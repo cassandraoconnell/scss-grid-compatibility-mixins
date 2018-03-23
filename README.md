@@ -2,7 +2,7 @@
 
 ### CSS grid layout is great, but IE takes different syntax to make it work. (Edge is better, but still takes some finagling.) Here are some mixins that let you use the [universal "correct" syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/grid) that works everywhere else.
 
-### Grid Properties Supported:
+### Supported:
 - display-grid: `@include display-grid;`
 - grid-area: `@include grid-area($start-row, $start-column, $end-row, $end-column);`
 - grid-column: `@include grid-column($start-column, $end-column);`
@@ -15,8 +15,11 @@
 - grid-template-columns: `@include grid-template-columns($value);`
 - grid-template-rows: `@include grid-template-rows($value);`
 
+### Not currently supported, but plan on implementing in the future:
+- Mixed syntax for grid templating (for example, `@include grid-template-columns(50px repeat(12, 1fr) 50px);`). I know, I know. This is first on my list to work on next.
+- Named rows/columns, and consequently `grid` and `grid-template-areas`.
 
-### Grid Properties Not Supported (...yet):
+
+### Not supported:
 - `grid-auto-rows` and `grid-auto-flow` (IE doesn't have comparable syntax/support. Explicitly position all grid elements instead.)
 - `grid-column-gap`, `grid-row-gap`, and `grid-gap` (IE doesn't have comparable syntax/support. Create specific columns for gaps, or use margin/padding.)
-- Named rows/columns (haven't implemented yet), and consequently `grid` and `grid-template-areas`.

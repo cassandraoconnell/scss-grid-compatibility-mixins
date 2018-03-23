@@ -27,8 +27,11 @@
 //  @include display-grid;
 //
 @mixin display-grid {
-    display: grid;
     display: -ms-grid;
+
+    @supports (display: grid) {
+        display: grid;
+    }
 }
 // ======================================================= //
 
@@ -37,16 +40,16 @@
 //  Usage:
 //  @include grid-area($start-row, $start-column, $end-row, $end-column);
 //
-//  @param { Number} - $start-row: Value of the row the element starts on.
-//  @param { Number} - $start-column: Value of the column the element starts on.
-//  @param { Number} - $end-row: Value of the row to end on. 
-//  @param { Number} - $end-column: Value of the column to end on.
+//  @param $start-row: <positive-integer> - Value of the row the element starts on.
+//  @param $start-column: <positive-integer> - Value of the column the element starts on.
+//  @param $end-row: <positive-integer> - Value of the row to end on. 
+//  @param $end-column: <positive-integer> - Value of the column to end on.
 //
 @mixin grid-area($start-row, $start-column, $end-row, $end-column) {
     @include grid-row-start(#{$start-row});
     @include grid-column-start(#{$start-column});
-    @include grid-row-end(#{$end-row});
-    @include grid-column-end(#{$end-column});
+    @include grid-row-end(#{$end-row}, #{$start-row});
+    @include grid-column-end(#{$end-column}, #{$start-column});
 }
 // ======================================================= //
 
@@ -55,8 +58,8 @@
 //  Usage:
 //  @include grid-column($start-column, $end-column);
 //
-//  @param { Number} - $start-column: Value of the column the element starts on.
-//  @param { Number} - $end-column: Value of the column to end on. 
+//  @param $start-column: <positive-integer> - Value of the column the element starts on.
+//  @param $end-column: <positive-integer> - Value of the column to end on. 
 //
 @mixin grid-column($start-column, $end-column) {
     @include grid-column-start($start-column);
@@ -69,13 +72,12 @@
 //  Usage:
 //  @include grid-column-end($end-column, $start-column);
 //
-//  @param { Number} - $end-column: Value of the column to end on. 
-//  @param { Number} - $start-column: Value of the column the element starts on.
+//  @param $end-column: <positive-integer> - Value of the column to end on. 
+//  @param $start-column: <positive-integer> - Value of the column the element starts on.
 //
 @mixin grid-column-end($end-column, $start-column) {
-    $column-span: $end-column - $start-column;
-
-    -ms-grid-column-span: $column-span;
+    // Have to use `calc` here to please the Sass compiler.
+    -ms-grid-column-span: calc(#{$end-column} - #{$start-column});
 
     @supports (grid-column-end: #{$end-column}) {
         grid-column-end: $end-column;
@@ -92,7 +94,7 @@
 //  Usage:
 //  @include grid-column-start($start-column);
 //
-//  @param { Number} - $start-column: Value of the column the element starts on.
+//  @param $start-column: <positive-integer> - Value of the column the element starts on.
 //
 @mixin grid-column-start($start-column) {
     -ms-grid-column: $start-column;
@@ -108,8 +110,8 @@
 //  Usage:
 //  @include grid-row($start-row, $end-row);
 //
-//  @param { Number} - $start-row: Value of the row the element starts on.
-//  @param { Number} - $end-row: Value of the row to end on. 
+//  @param $start-row: <positive-integer> - Value of the row the element starts on.
+//  @param $end-row: <positive-integer> - Value of the row to end on. 
 //
 @mixin grid-row($start-row, $end-row) {
     @include grid-row-start($start-row);
@@ -122,13 +124,12 @@
 //  Usage:
 //  @include grid-row-end($end-row, $start-row);
 //
-//  @param { Number} - $end-row: Value of the row to end on. 
-//  @param { Number} - $start-row: Value of the row the element starts on.
+//  @param $end-row: <positive-integer> - Value of the row to end on. 
+//  @param $start-row: <positive-integer> - Value of the row the element starts on.
 //
 @mixin grid-row-end($end-row, $start-row) {
-    $row-span: $end-row - $start-row;
-    
-    -ms-grid-row-span: $row-span;
+    // Have to use `calc` here to please the Sass compiler.
+    -ms-grid-row-span: calc(#{$end-row} - #{$start-row});
 
     @supports (grid-row-end: #{$end-row}) {
         grid-row-end: $end-row;
@@ -145,7 +146,7 @@
 //  Usage:
 //  @include grid-row-start($start-row);
 //
-//  @param { Number} - $start-row: Value of the row the element starts on.
+//  @param $start-row: <positive-integer> - Value of the row the element starts on.
 //
 @mixin grid-row-start($start-row) {
     -ms-grid-row: $start-row;
@@ -161,8 +162,12 @@
 //  Usage:
 //  @include grid-template($template-columns, $template-rows);
 //
-//  @param { Number | String } - $template-columns: Value for column template.
-//  @param { Number | String } - $template-rows: Value for row template.
+//  @param $template-columns: 
+//         <length> | <percentage> | <flex> | minmax(min, max) | auto | repeat( <positive-integer> , [ <length> | <percentage> | <flex> ] )
+//          Value for column template.
+//  @param $template-rows: 
+//         <length> | <percentage> | <flex> | minmax(min, max) | auto | repeat( <positive-integer> , [ <length> | <percentage> | <flex> ] )
+//          Value for row template.
 //
 @mixin grid-template($template-columns, $template-rows) {
     @include grid-template-columns($template-columns);
@@ -175,7 +180,9 @@
 //  Usage:
 //  @include grid-template-columns($value);
 //
-//  @param { Number | String } - $value: Number and sizing of columns in grid template (accepts repeat() and minmax())
+//  @param $value: 
+//         <length> | <percentage> | <flex> | minmax(min, max) | auto | repeat( <positive-integer> , [ <length> | <percentage> | <flex> ] )
+//          Number and sizing of columns in grid template.
 //
 @mixin grid-template-columns($value) {
     $parsed-value: parse-template-value($value);
@@ -193,7 +200,9 @@
 //  Usage:
 //  @include grid-template-rows($value);
 //
-//  @param { Number | String } - $value: Number and sizing of rows in grid template (accepts repeat() and minmax())
+//  @param $value: 
+//         <length> | <percentage> | <flex> | minmax(min, max) | auto | repeat( <positive-integer> , [ <length> | <percentage> | <flex> ] )
+//          Number and sizing of rows in grid template.
 //
 @mixin grid-template-rows($value) {
     $parsed-value: parse-template-value($value);
@@ -211,13 +220,16 @@
 
 // ================= UTILITY FUNCTIONS ==================== //
 @function parse-template-value($value-to-parse) {
+    
+    // For later implementations...
+    // $string-value: type-of(inspect($value: $value-to-parse));
 
     @if type-of($value: $value-to-parse) == 'number' {
         @return $value-to-parse;
     } @else if str-slice($string: $value-to-parse, $start-at: 1, $end-at: 6) == "repeat" {
         @return parse-repeat($value-to-parse)
     } @else if str-slice($string: $value-to-parse, $start-at: 1, $end-at: 6) == "minmax" {
-        @return parse-minmax($value-to-parse)
+        @return $value-to-parse;
     } @else {
         @error 'Error parsing template value.';
     };
@@ -237,43 +249,53 @@
     $new-value: ();
 
     @for $i from 1 through $repetition {
-        $new-value: append($list: $new-value, $val: $i, $separator: 'space')
+        $new-value: append($list: $new-value, $val: $size, $separator: 'space')
     }
     
     @return $new-value;
 }
 
-// Unfinished.
-@function parse-minmax($value) {
-
-}
-
-// Broken
 @function to-number($value) {
     /* Simplified version of Hugo Giraudel's to-number Sass function, as seen here: https://www.sassmeister.com/gist/9fa19d254864f33d4a80 */
     @if type-of($value) != 'string' {
         @error 'Parameter for `to-number` function must be a string.'
     };
 
-    $digits: 0;
+    $digits: 1;
     $result: 0;
+    $unit: '';
     $numbers: ('0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9);
 
     @for $i from 1 through str-length($string: $value) {
         $character: str-slice($string: $value, $start-at: $i, $end-at: $i);
         $number: map-get($map: $numbers, $key: $character);
 
-        $digits: 0;
-
-        @if $digits == 1 {
-            $result: $number;
+        @if $number == null {
+            $unit: str-insert($string: $unit, $insert: $character, $index: str-length($unit) + 1)
         } @else {
+            $previous-result: $result * $digits;
+            $result: $previous-result + $number;
             $digits: $digits * 10;
-            $result: $result + ($number / $digits);
         }
     }
-    
-    @return $result;
+
+    @if $unit != '' {
+        @return to-unit($value: $result, $unit-string: $unit);
+    } @else {
+        @return $result;
+    }
+};
+
+@function to-unit($value, $unit-string) {
+     /* Based on Hugo Giraudel's to-unit Sass function, as seen here: https://www.sassmeister.com/gist/9fa19d254864f33d4a80 */
+    $units: ('px': 1px, 'cm': 1cm, 'mm': 1mm, '%': 1%, 'ch': 1ch, 'pc': 1pc, 'in': 1in, 'em': 1em, 'rem': 1rem, 'pt': 1pt, 'ex': 1ex, 'vw': 1vw, 'vh': 1vh, 'vmin': 1vmin, 'vmax': 1vmax, 'fr': 1fr);
+
+
+    @if map-get($map: $units, $key: $unit-string) == null {
+        @error 'Invalid unit used.'
+    };
+
+    @return $value * map-get($map: $units, $key: $unit-string)
 };
 
 @function slash() {

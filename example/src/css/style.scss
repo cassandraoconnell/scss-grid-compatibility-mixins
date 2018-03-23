@@ -1,6 +1,47 @@
 @import '../../../grid-mixins';
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
 .main-grid {
     @include display-grid;
-    @include grid-template-rows(repeat(2, 1fr));
+    @include grid-template(repeat(12, 1fr), repeat(12, 1fr));
+    background-color: #1a1a1a;
+    height: 100%;
+    width: 100%;
+
+    %grid-item {
+        background-color: #fafafa;
+
+        p {
+            color: #1a1a1a;
+            font-family: monospace;
+            margin: 15px;
+        };
+    };
+
+    .one {
+        @extend %grid-item;
+        @include grid-area(2, 2, 6, 6);
+        
+    };
+
+    .two {
+        @extend %grid-item;
+        @include grid-area(7, 2, 12, 6);
+    };
+
+    .three {
+        @extend %grid-item;
+        @include grid-area(2, 7, 9, 12);
+    };
+
+    .four {
+        @extend %grid-item;
+        @include grid-area(10, 7, 12, 12);
+    };
 }
