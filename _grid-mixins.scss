@@ -76,8 +76,8 @@
 //  @param $start-column: <positive-integer> - Value of the column the element starts on.
 //
 @mixin grid-column-end($end-column, $start-column) {
-    // Have to use `calc` here to please the Sass compiler.
-    -ms-grid-column-span: calc(#{$end-column} - #{$start-column});
+    $span: to-number($value: $end-column) - to-number($value: $start-column);
+    -ms-grid-column-span: $span;
 
     @supports (grid-column-end: #{$end-column}) {
         grid-column-end: $end-column;
@@ -128,8 +128,8 @@
 //  @param $start-row: <positive-integer> - Value of the row the element starts on.
 //
 @mixin grid-row-end($end-row, $start-row) {
-    // Have to use `calc` here to please the Sass compiler.
-    -ms-grid-row-span: calc(#{$end-row} - #{$start-row});
+    $span: to-number($value: $end-row) - to-number($value: $start-row);
+    -ms-grid-row-span: $span;
 
     @supports (grid-row-end: #{$end-row}) {
         grid-row-end: $end-row;
