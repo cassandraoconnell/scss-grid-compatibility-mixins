@@ -258,7 +258,11 @@
 @function to-number($value) {
     /* Simplified version of Hugo Giraudel's to-number Sass function, as seen here: https://www.sassmeister.com/gist/9fa19d254864f33d4a80 */
     @if type-of($value) != 'string' {
-        @error 'Parameter for `to-number` function must be a string.'
+        @if type-of($value) == 'number' {
+            @return $value;
+        } @else {
+            @error 'Parameter for `to-number` function must be a string.';
+        }; 
     };
 
     $digits: 1;
